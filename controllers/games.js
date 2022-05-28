@@ -17,13 +17,13 @@ export async function getGames(req,res){
         }
 }
 export async function postGame(req,res){
-        const { name } = req.query
+        const { name, image, stockTotal,categoryId, pricePerDay} = req.body
 
         try {
-                const categoryId = await connection.query('select * from categories')
-                const insertGame = await connection.query('insert into games ()')
-
+                const result = await connection.query(`INSERT INTO games (name, image,"stockTotal","categoryId","pricePerDay") values($1,$2,$3,$4,$5)`,[name,image,stockTotal,categoryId,pricePerDay])
+                res.sendStatus(200)
+                console.log(result)
         } catch (err) {
-
+                res.send(err)
         }
 }

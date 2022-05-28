@@ -6,6 +6,7 @@ export default async function validatePostCustomer(req,res,next){
         if(validation.error){
                 return res.send(validation.error.message)
         }
+        
         const {id} = req.params
         const {cpf} = req.body
         try{

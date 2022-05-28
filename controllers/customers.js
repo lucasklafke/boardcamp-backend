@@ -35,3 +35,25 @@ export async function postCustomer(req,res){
                 res.send(err)
         }
 }
+export async function updateCustomer(req,res){
+        const { name, phone, birthday, cpf } = req.body
+        const customerId = req.params.id
+        console.log(customerId)
+        try{
+                const query = await connection.query(`
+                        update
+                                customers
+                        set
+                                name = $1,
+                                phone = $2,
+                                cpf = $3,
+                                birthday = $4
+                        where id = $5
+                `,[name,phone,cpf,birthday,customerId])
+
+                res.sendStatus(201)
+        }catch(err){
+                console.log(err)
+                res.send(err)
+        }
+} 

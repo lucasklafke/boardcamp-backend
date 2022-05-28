@@ -11,7 +11,7 @@ export default async function validatePostCustomer(req,res,next){
         try{
                 const user = await connection.query('select * from customers where cpf = $1',[cpf])
                 if((user.rows).length > 0){
-                        return res.status(400).send("cpf already registered")
+                        return res.status(409).send("cpf already registered")
                 }
         }catch(err){
                 res.send(err)

@@ -29,7 +29,7 @@ export async function postCustomer(req,res){
 
         const {name,phone,birthday,cpf} = req.body
         try{
-                const query = await connection.query('insert into customers  (name,phone,cpf,birthday) values($1,$2,$3,$4)', [name, phone, cpf, birthday])
+                const query = await connection.query("--sql insert into customers  (name,phone,cpf,birthday) values($1,$2,$3,$4)", [name, phone, cpf, birthday])
                 res.sendStatus(200)
         }catch(err){
                 res.send(err)

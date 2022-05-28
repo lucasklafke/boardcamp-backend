@@ -12,8 +12,6 @@ export async function getCustomers(req,res){
 }
 export async function getCustomer(req,res){
         const customerId = req.params.id
-        console.log("custId",customerId)
-        console.log("params",req.params)
         try {
                 const client = await connection.query('select * from customers where id=$1;', [customerId])
 
@@ -38,7 +36,6 @@ export async function postCustomer(req,res){
 export async function updateCustomer(req,res){
         const { name, phone, birthday, cpf } = req.body
         const customerId = req.params.id
-        console.log(customerId)
         try{
                 const query = await connection.query(`
                         update
@@ -53,7 +50,6 @@ export async function updateCustomer(req,res){
 
                 res.sendStatus(201)
         }catch(err){
-                console.log(err)
                 res.send(err)
         }
 } 

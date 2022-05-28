@@ -15,6 +15,8 @@ app.use(cors())
 
 app.use(customerRoutes)
 
+app.get("/games", getGames)
+
 app.get("/categories", getCategories)
 app.post("/categories", postCategory)
 

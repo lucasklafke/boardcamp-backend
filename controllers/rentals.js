@@ -90,3 +90,34 @@ export async function postRent(req, res) {
     res.send(err);
   }
 }
+
+export async function finishRent(req,res){
+  const {id} = req.params
+  try{
+    const result = await connection.query(
+      `SELECT rentals.*, games."pricePerDay" from rentals 
+        join games
+          on rentals."gameId" = games.id
+        where rentals.id = $1`,
+      [id]
+    );
+    if((result.rows).length <= 0){
+      return res.sendStatus(404)
+    }
+    if(result.rows[0].returnDate !== null){
+      return res.sendStatus(400)
+    }
+    const date = dayjs().format("YYYY-MM-DD")
+
+    const splitedDate = String(result.rows[0].rentDate).split(" ");
+    const days = splitedDate[2]
+    const delayFee = Number(result.rows[0].pricePerDay) * (Number(dayjs().date()) - Number(days))
+
+    const update = await connection.query(
+      `UPDATE rentals set "returnDate" = $1,  "delayFee" = $2 where id = $3`,[date,delayFee,id] 
+    )
+    res.sendStatus(200)
+  }catch(err){
+    res.send(err)
+  }
+}

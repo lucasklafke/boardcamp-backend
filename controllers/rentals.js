@@ -20,7 +20,7 @@ export async function getRents(req, res) {
                                 on customers.id = rentals."customerId"
                         join categories
                                 on games."categoryId" = categories.id
-            where customers.id = $1
+            where customers.id = $1 and rentals."returnDate" is null
         `,[customerId]
       );
     } else{
@@ -37,7 +37,8 @@ export async function getRents(req, res) {
                                     on customers.id = rentals."customerId"
                             join categories
                                     on games."categoryId" = categories.id
-            `
+            where rentals."returnDate" is null     
+          `
         );
     }
     const rentList = []
@@ -124,7 +125,7 @@ export async function finishRent(req,res){
 
 export async function deleteRent(req,res){
   const {id} = req.params
-
+  console.log(id)
   try{
     const rentResult = await connection.query(
       `SELECT * from rentals where id = $1`,[id]
@@ -133,6 +134,7 @@ export async function deleteRent(req,res){
       return res.sendStatus(404)
     }
       if (rentResult.rows[0].returnDate !== null) {
+        console.log(rentResult.rows[0].returnDate);
         return res.sendStatus(400);
       }
     const result = await connection.query(

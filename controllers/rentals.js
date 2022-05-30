@@ -121,3 +121,25 @@ export async function finishRent(req,res){
     res.send(err)
   }
 }
+
+export async function deleteRent(req,res){
+  const {id} = req.params
+
+  try{
+    const rentResult = await connection.query(
+      `SELECT * from rentals where id = $1`,[id]
+    )
+    if ((rentResult.rows).length <= 0){
+      return res.sendStatus(404)
+    }
+      if (rentResult.rows[0].returnDate !== null) {
+        return res.sendStatus(400);
+      }
+    const result = await connection.query(
+      `DELETE FROM rentals WHERE id = $1`,[id]
+    );
+    res.sendStatus(200)
+  }catch(err){
+    res.send(err)
+  }
+}

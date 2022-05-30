@@ -24,4 +24,5 @@ app.post("/games", validateGame, postGame);
 app.get("/categories", getCategories);
 app.post("/categories", postCategory);
 
-app.listen(process.env.PORT);
+const port = process.env.PORT || 4000
+app.listen(port, () =>{console.log(`listening on port ${port}`)});

@@ -1,11 +1,14 @@
 import connection from "../db.js";
 import dayjs from "dayjs";
 export async function getRents(req, res) {
-  const customerId = req.query;
-
+  const {customerId} = req.query;
+  
   try {
-    const result = await connection.query(
-      `SELECT rentals.*,
+    let result;
+    if(customerId){
+      console.log("entrei")
+      result = await connection.query(
+        `SELECT rentals.*,
                 games.name as "gameName", games."categoryId",
                 customers.name,
                 categories.name as category
@@ -17,8 +20,26 @@ export async function getRents(req, res) {
                                 on customers.id = rentals."customerId"
                         join categories
                                 on games."categoryId" = categories.id
-        `
-    );
+            where customers.id = $1
+        `,[customerId]
+      );
+    } else{
+        result = await connection.query(
+          `SELECT rentals.*,
+                    games.name as "gameName", games."categoryId",
+                    customers.name,
+                    categories.name as category
+                    from
+                            games
+                            join rentals 
+                                    on games.id = rentals."gameId"
+                            join customers
+                                    on customers.id = rentals."customerId"
+                            join categories
+                                    on games."categoryId" = categories.id
+            `
+        );
+    }
     const rentList = []
     const rows = result.rows
     rows.forEach(row => {
